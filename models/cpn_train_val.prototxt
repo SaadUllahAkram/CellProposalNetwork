@@ -1,0 +1,373 @@
+name: "cpn_model"
+
+input: "data"
+input_dim: 1
+input_dim: 1
+input_dim: 600
+input_dim: 600
+
+input: "labels"
+input_dim: 1
+input_dim: 6
+input_dim: 72
+input_dim: 72
+
+input: "labels_weights"
+input_dim: 1
+input_dim: 6
+input_dim: 72
+input_dim: 72
+
+input: "bbox_targets"
+input_dim: 1
+input_dim: 24
+input_dim: 72
+input_dim: 72
+
+input: "bbox_loss_weights"
+input_dim: 1
+input_dim: 24
+input_dim: 72
+input_dim: 72
+
+layer {
+	name: "conv1"
+	type: "Convolution"
+	bottom: "data"
+	param {
+		lr_mult: 1
+	}
+	param {
+		lr_mult: 2
+	}
+	convolution_param {
+		num_output: 16
+		kernel_size: 7
+		pad: 0
+		stride: 1
+		weight_filler {
+			type: "gaussian"
+			std: 0.01
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+	top: "conv1"
+}
+
+layer {
+	name: "relu_conv1"
+	type: "ReLU"
+	bottom: "conv1"
+	top: "conv1"
+}
+
+layer {
+	name: "norm1"
+	type: "LRN"
+	bottom: "conv1"
+	lrn_param {
+		local_size: 3
+		alpha: 0.00005
+		beta: 0.75
+		norm_region: WITHIN_CHANNEL
+	}
+	top: "norm1"
+}
+
+layer {
+	name: "pool1"
+	type: "Pooling"
+	bottom: "norm1"
+	pooling_param {
+		kernel_size: 3
+		stride: 2
+		pad: 1
+		pool: MAX
+	}
+	top: "pool1"
+}
+
+layer {
+	name: "conv2"
+	type: "Convolution"
+	bottom: "pool1"
+	param {
+		lr_mult: 1
+	}
+	param {
+		lr_mult: 2
+	}
+	convolution_param {
+		num_output: 32
+		kernel_size: 5
+		pad: 0
+		stride: 1
+		weight_filler {
+			type: "gaussian"
+			std: 0.01
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+	top: "conv2"
+}
+
+layer {
+	name: "relu_conv2"
+	type: "ReLU"
+	bottom: "conv2"
+	top: "conv2"
+}
+
+layer {
+	name: "norm2"
+	type: "LRN"
+	bottom: "conv2"
+	lrn_param {
+		local_size: 3
+		alpha: 0.00005
+		beta: 0.75
+		norm_region: WITHIN_CHANNEL
+	}
+	top: "norm2"
+}
+
+layer {
+	name: "pool2"
+	type: "Pooling"
+	bottom: "norm2"
+	pooling_param {
+		kernel_size: 3
+		stride: 2
+		pad: 1
+		pool: MAX
+	}
+	top: "pool2"
+}
+
+layer {
+	name: "conv3"
+	type: "Convolution"
+	bottom: "pool2"
+	param {
+		lr_mult: 1
+	}
+	param {
+		lr_mult: 2
+	}
+	convolution_param {
+		num_output: 64
+		kernel_size: 3
+		pad: 0
+		stride: 1
+		weight_filler {
+			type: "gaussian"
+			std: 0.01
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+	top: "conv3"
+}
+
+layer {
+	name: "relu_conv3"
+	type: "ReLU"
+	bottom: "conv3"
+	top: "conv3"
+}
+
+layer {
+	name: "norm3"
+	type: "LRN"
+	bottom: "conv3"
+	lrn_param {
+		local_size: 3
+		alpha: 0.00005
+		beta: 0.75
+		norm_region: WITHIN_CHANNEL
+	}
+	top: "norm3"
+}
+
+layer {
+	name: "pool3"
+	type: "Pooling"
+	bottom: "norm3"
+	pooling_param {
+		kernel_size: 3
+		stride: 2
+		pad: 1
+		pool: MAX
+	}
+	top: "pool3"
+}
+
+layer {
+	name: "conv_proposal1"
+	type: "Convolution"
+	bottom: "pool3"
+	param {
+		lr_mult: 1
+	}
+	param {
+		lr_mult: 2
+	}
+	convolution_param {
+		num_output: 256
+		kernel_size: 3
+		pad: 0
+		stride: 1
+		weight_filler {
+			type: "gaussian"
+			std: 0.01
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+	top: "conv_proposal1"
+}
+
+layer {
+	name: "relu_conv_proposal1"
+	type: "ReLU"
+	bottom: "conv_proposal1"
+	top: "conv_proposal1"
+}
+
+layer {
+	name: "proposal_cls_score"
+	type: "Convolution"
+	bottom: "conv_proposal1"
+	param {
+		lr_mult: 1
+	}
+	param {
+		lr_mult: 2
+	}
+	convolution_param {
+		num_output: 12
+		kernel_size: 1
+		pad: 0
+		stride: 1
+		weight_filler {
+			type: "gaussian"
+			std: 0.01
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+	top: "proposal_cls_score"
+}
+
+layer {
+	name: "proposal_bbox_pred"
+	type: "Convolution"
+	bottom: "conv_proposal1"
+	param {
+		lr_mult: 1
+	}
+	param {
+		lr_mult: 2
+	}
+	convolution_param {
+		num_output: 24
+		kernel_size: 1
+		pad: 0
+		stride: 1
+		weight_filler {
+			type: "gaussian"
+			std: 0.01
+		}
+		bias_filler {
+			type: "constant"
+			value: 0
+		}
+	}
+	top: "proposal_bbox_pred"
+}
+
+layer {
+	name: "proposal_cls_score_reshape"
+	type: "Reshape"
+	bottom: "proposal_cls_score"
+	reshape_param {
+		shape {
+			dim: 0
+			dim: 2
+			dim: -1
+			dim: 0
+		}
+	}
+	top: "proposal_cls_score_reshape"
+}
+
+layer {
+	name: "labels_reshape"
+	type: "Reshape"
+	bottom: "labels"
+	reshape_param {
+		shape {
+			dim: 0
+			dim: 1
+			dim: -1
+			dim: 0
+		}
+	}
+	top: "labels_reshape"
+}
+
+layer {
+	name: "labels_weights_reshape"
+	type: "Reshape"
+	bottom: "labels_weights"
+	reshape_param {
+		shape {
+			dim: 0
+			dim: 1
+			dim: -1
+			dim: 0
+		}
+	}
+	top: "labels_weights_reshape"
+}
+
+layer {
+	name: "loss"
+	type: "SoftmaxWithLoss"
+	bottom: "proposal_cls_score_reshape"
+	bottom: "labels_reshape"
+	bottom: "labels_weights_reshape"
+	top: "loss_cls"
+	loss_weight: 1
+}
+
+layer {
+	name: "accuracy"
+	type: "Accuracy"
+	bottom: "proposal_cls_score_reshape"
+	bottom: "labels_reshape"
+	top: "accuracy"
+}
+
+layer {
+	name: "loss_bbox"
+	type: "SmoothL1Loss"
+	bottom: "proposal_bbox_pred"
+	bottom: "bbox_targets"
+	bottom: "bbox_loss_weights"
+	loss_weight: 10
+	top: "loss_bbox"
+}
+
