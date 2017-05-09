@@ -11,8 +11,12 @@ end
 for d = {'Fluo-N2DL-HeLa'}
     for s = 1:2
         dataset_name = sprintf('%s-%02d', d{1}, s);
+        list         = dir(fullfile(data_dir, filesep, sprintf('%s-t*_res.png', dataset_name)));
+        for i=1:length(list)
+            delete(fullfile(data_dir, list(i).name))
+        end
         list         = dir(fullfile(data_dir, filesep, sprintf('%s-t*.png', dataset_name)));
-        if ~isempty(strfind(dataset_name, 'Fluo-N2DL-HeLa'))
+        if contains(dataset_name, 'Fluo-N2DL-HeLa')
             conf.foi_border = 25;
         else
             conf.foi_border = 0;

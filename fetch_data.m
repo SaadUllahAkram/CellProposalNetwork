@@ -1,8 +1,8 @@
 function fetch_data()
 
-opts.cspn_models = 'https://dl.dropboxusercontent.com/u/18078337/GitHub/CSPN_models.zip';
-opts.cpn_models  = 'https://dl.dropboxusercontent.com/u/18078337/GitHub/CPN_models.zip';
-opts.demo_images = 'https://dl.dropboxusercontent.com/u/18078337/GitHub/demo_images.zip';
+opts.cspn_models = 'https://dl.dropboxusercontent.com/s/hjkj0b4gosnn0bn/CSPN_models.zip';
+opts.cpn_models  = 'https://dl.dropboxusercontent.com/s/cgb19x4igq7nd0u/CPN_models.zip';
+opts.demo_images = 'https://dl.dropboxusercontent.com/s/vtlfjfizurzn1ul/demo_images.zip';
 
 dir_data    = fullfile(fileparts(mfilename('fullpath')), 'data');
 dir_models  = fullfile(dir_data, 'models');
